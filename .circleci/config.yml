@@ -12,7 +12,7 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+      - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
@@ -32,3 +32,10 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: docker build -t imkit-chatserver .
+
+      - run: docker tag imkit-chatserver:latest 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:1.${CIRCLE_BUILD_NUM}
+        
+      - run: docker images
+
