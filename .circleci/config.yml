@@ -46,3 +46,9 @@ jobs:
           docker images
     steps:
       - push
+workflows:
+  version: 2
+  one_and_two:
+    jobs:
+      - build
+      - upload-ecr
