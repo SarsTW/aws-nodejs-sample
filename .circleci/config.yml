@@ -53,4 +53,6 @@ workflows:
   one_and_two:
     jobs:
       - build
-      - upload-ecr
+      - upload-ecr:
+          requires:
+            - build
