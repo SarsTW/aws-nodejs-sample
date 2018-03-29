@@ -22,10 +22,10 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Install dependencies
+          name: Install awscli
           command: |
-            apk add --no-cache py-pip=9.0.0-r1
-            pip install awscli==1.11.76
+            sudo apt-get -y -qq install awscli
+
       # Download and cache dependencies
       - restore_cache:
           keys:
