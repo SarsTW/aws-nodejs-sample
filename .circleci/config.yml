@@ -42,10 +42,11 @@ jobs:
         aws_auth:
           aws_access_key_id: $AWS_ACCESS_KEY_ID_STAGING
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY_STAGING
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run: |
           docker images
-    steps:
-      - push
+          docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM}
 workflows:
   version: 2
   one_and_two:
