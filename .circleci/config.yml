@@ -19,7 +19,8 @@ jobs:
 
     steps:
       - checkout
-
+      - setup_remote_docker:
+          docker_layer_caching: true
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -34,19 +35,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - setup_remote_docker:
-          docker_layer_caching: true
-  upload-ecr:
-    docker:
-      - image: circleci/node:7.10
-        aws_auth:
-          aws_access_key_id: $AWS_ACCESS_KEY_ID_STAGING
-          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY_STAGING
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run: |
-          docker images
+      - run: docker build 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM} .
+      - deploy: |
+          aws configure set region $AWS_REGION
+          $(aws ecr get-login)
           docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM}
 workflows:
   version: 2
