@@ -40,7 +40,10 @@ jobs:
       - run:
           name: docker build
           command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM} .
-      - deploy: |
+
+      - deploy:
+          name: upload to ECR
+          command: |
             aws configure set region $AWS_REGION
             $(aws ecr get-login)
             docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM}
