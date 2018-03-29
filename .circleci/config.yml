@@ -38,7 +38,8 @@ jobs:
           docker_layer_caching: true
   upload-ecr:
     docker:
-      - aws_auth:
+      - image: circleci/node:7.10
+        aws_auth:
           aws_access_key_id: $AWS_ACCESS_KEY_ID_STAGING
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY_STAGING
     steps:
