@@ -28,7 +28,6 @@ jobs:
             curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
             unzip awscli-bundle.zip
             ./awscli-bundle/install -b ~/bin/aws
-            export PATH=~/bin:$PATH
 
       # Download and cache dependencies
       - restore_cache:
@@ -53,8 +52,8 @@ jobs:
       - deploy:
           name: upload to ECR
           command: |
-            aws configure set region $AWS_REGION
-            $(aws ecr get-login --no-include-email)
+            ~/bin/aws configure set region $AWS_REGION
+            $(~/bin/aws ecr get-login --no-include-email)
             docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1}
 
 workflows:
