@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            sudo apt-get -yy install unzip curl
+            sudo apt-get -yy install unzip curl python-pip libpython-dev
             curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
             unzip awscli-bundle.zip
             ./awscli-bundle/install -b ~/bin/aws
@@ -48,14 +48,14 @@ jobs:
 
       - run:
           name: docker build
-          command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM} .
+          command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1} .
 
       - deploy:
           name: upload to ECR
           command: |
             aws configure set region $AWS_REGION
-            aws ecr get-login
-            docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:2.2.${CIRCLE_BUILD_NUM}
+            $(aws ecr get-login --no-include-email)
+            docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1}
 
 workflows:
   version: 2
