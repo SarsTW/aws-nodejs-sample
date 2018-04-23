@@ -21,14 +21,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: Install awscli
-          command: |
-            sudo apt-get -yy install unzip curl python-pip libpython-dev
-            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-            unzip awscli-bundle.zip
-            ./awscli-bundle/install -b ~/bin/aws
-
+      
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -37,7 +30,7 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: npm install
+          name: Install npm
           command: npm install
 
       - save_cache:
@@ -46,21 +39,20 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: docker build
+          name: Build docker image
           command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1} .
 
+      - run:
+          name: Install awscli
+          command: |
+            sudo apt-get -yy install unzip curl python-pip libpython-dev
+            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+            unzip awscli-bundle.zip
+            ./awscli-bundle/install -b ~/bin/aws
+
       - deploy:
-          name: upload to ECR
+          name: Upload docker image to ECR
           command: |
             ~/bin/aws configure set region $AWS_REGION
             $(~/bin/aws ecr get-login --no-include-email)
             docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1}
-
-workflows:
-  version: 2
-  one_and_two:
-    jobs:
-      - build
-      - upload-ecr:
-          requires:
-            - build
