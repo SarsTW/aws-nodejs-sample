@@ -5,8 +5,6 @@
 version: 2
 jobs:
   build:
-    environment:
-      SHORT_GIT_HASH: $(echo $CIRCLE_SHA1 | cut -c -7)
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
@@ -49,14 +47,14 @@ jobs:
 
       - run:
           name: docker build
-          command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${SHORT_GIT_HASH} .
+          command: docker build -t 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1} .
 
       - deploy:
           name: upload to ECR
           command: |
             ~/bin/aws configure set region $AWS_REGION
             $(~/bin/aws ecr get-login --no-include-email)
-            docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${SHORT_GIT_HASH}
+            docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1}
 
 workflows:
   version: 2
