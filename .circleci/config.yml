@@ -47,11 +47,11 @@ jobs:
           command: |
             sudo apt-get -yy install python-pip libpython-dev
             pip install awscli --upgrade --user
-            export PATH=~/.local/bin:$PATH
 
       - deploy:
           name: Upload docker image to ECR
           command: |
+            export PATH=~/.local/bin:$PATH
             aws configure set region $AWS_REGION
             $(aws ecr get-login --no-include-email)
             docker push 561452221325.dkr.ecr.ap-southeast-1.amazonaws.com/imkit-chatserver:${CIRCLE_SHA1}
