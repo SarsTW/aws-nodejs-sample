@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            sudo apt-get -yy install python-pip
+            sudo apt-get -yy install python-pip libpython-dev
             pip install awscli --upgrade --user
 
       - deploy:
