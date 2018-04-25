@@ -45,10 +45,8 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            sudo apt-get -yy install unzip curl python-pip libpython-dev
-            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-            unzip awscli-bundle.zip
-            ./awscli-bundle/install -b ~/bin/aws
+            sudo apt-get -yy install python-pip
+            pip install awscli --upgrade --user
 
       - deploy:
           name: Upload docker image to ECR
