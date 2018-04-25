@@ -47,6 +47,7 @@ jobs:
           command: |
             sudo apt-get -yy install python-pip libpython-dev
             pip install awscli --upgrade --user
+            export PATH=~/.local/bin:$PATH
 
       - deploy:
           name: Upload docker image to ECR
